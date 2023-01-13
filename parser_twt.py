@@ -17,5 +17,6 @@ class Find_info():
             if i == 10:
                 break
         return self.result
+    
 
     
