@@ -37,6 +37,7 @@ def get_tweet_by_hash(messege):
     result = finder.find_by_hash()
     i = 0
     for item in result:
+        bot.send_message(messege.chat.id, f'<b>Автор:</b> <code>{result["username"][i]}</code>\n <b>пост</b> <code>{result["content"][i]}</code>\n', parse_mode='HTML')
         bot.send_message(messege.chat.id, f'<b>Автор:</b> <code>{result["username"][i]}</code>\n <b></b> <code>{result["content"][i]}</code>\n', parse_mode='HTML')
         try:
             bot.send_message(messege.chat.id, result['full'][i])
