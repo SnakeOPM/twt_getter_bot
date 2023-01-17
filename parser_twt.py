@@ -22,7 +22,7 @@ class Find_info():
         self.result = defaultdict(list)
 
                 
-    @searcher_decorator #TODO: ПЕРЕДАТЬ ЕБУЧИЙ СЕЛФ В ДЕКОРАТОР
+    @searcher_decorator
     def find_by_hash(*sns):
         return f'#{sns}'
     
