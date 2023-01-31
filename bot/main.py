@@ -18,8 +18,9 @@ def start_messedge(message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     login = types.KeyboardButton("Свиня")
     hash = types.KeyboardButton('Поиск по #')
-    keyboard.add(login, hash)
-    bot.send_message(message.chat.id,'Привет, я подростающий, пришлите мне тег для поиска', reply_markup=keyboard)
+    users = types.KeyboardButton('Найти посты юзера')
+    keyboard.add(login, hash, users)
+    bot.send_message(message.chat.id,'Привет, я подростающий бот, пришлите мне тег для поиска', reply_markup=keyboard)
 
 
 @bot.message_handler(func=lambda msg: msg.text == "Свиня")
@@ -28,7 +29,7 @@ def reply_on_button(messege):
     bot.send_animation(messege.chat.id, filename)
 
 def get_tweet_by_hash(messege):
-    if messege.text[0] != '#':
+    if messege.text[0] == '#':
         bot.send_message(messege.chat.id, 'Неправильный набор')
         return False
     bot.send_message(messege.chat.id, 'начинаем поиск')
@@ -46,11 +47,20 @@ def get_tweet_by_hash(messege):
         i+=1
 
 
+def get_user_tweets(messege):
+    if messege.text[0] == '#':
+        bot.send_message(messege.chat.id, 'Неправильный набор')
+        return False
+
 @bot.message_handler(func=lambda msg: msg.text == 'Поиск по #' and msg.content_type == 'text')
 def redirect_to_hash(messege):
-    msg = bot.reply_to(messege, 'Введите тег (С # обязательно)')
+    msg = bot.reply_to(messege, 'Введите тег')
     bot.register_next_step_handler(msg, get_tweet_by_hash)
 
+
+@bot.message_handler(func=lambda msg: msg.text == 'Найти посты юзера' and msg.content_type == 'text')
+def redirect_to_user(messege):
+    msg = bot.reply_to(messege, 'Введите имя юзернейм')
 
 if __name__ == "__main__":
     bot.enable_save_next_step_handlers(delay=2)
