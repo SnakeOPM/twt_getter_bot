@@ -48,9 +48,21 @@ def get_tweet_by_hash(messege):
 
 
 def get_user_tweets(messege):
-    if messege.text[0] == '#':
+    if messege.text[0] == '@':
         bot.send_message(messege.chat.id, 'Неправильный набор')
         return False
+    
+
+    finder = Find_info(messege.text)
+    result = finder.find_user()
+    i = 0
+    for item in result:
+        bot.send_message(messege.chat.id, f'<b>Автор:</b> <code>{result["username"][i]}</code>\n <b>пост</b> <code>{result["content"][i]}</code>\n', parse_mode='HTML')
+        try:
+            bot.send_message(messege.chat.id, result['full'][i])
+        except Exception as e:
+            bot.send_message(messege.chat.id, 'no image in this post')
+        i+=1
 
 @bot.message_handler(func=lambda msg: msg.text == 'Поиск по #' and msg.content_type == 'text')
 def redirect_to_hash(messege):
@@ -61,6 +73,7 @@ def redirect_to_hash(messege):
 @bot.message_handler(func=lambda msg: msg.text == 'Найти посты юзера' and msg.content_type == 'text')
 def redirect_to_user(messege):
     msg = bot.reply_to(messege, 'Введите имя юзернейм')
+    bot.register_next_step_handler(msg, get_user_tweets)
 
 if __name__ == "__main__":
     bot.enable_save_next_step_handlers(delay=2)
